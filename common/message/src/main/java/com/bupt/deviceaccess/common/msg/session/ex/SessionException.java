@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.common.msg.aware;
+package com.bupt.deviceaccess.common.msg.session.ex;
 
-import com.bupt.deviceaccess.common.data.id.SessionId;
+public class SessionException extends Exception {
 
-public interface SessionAwareMsg {
+    private static final long serialVersionUID = 1L;
 
-    SessionId getSessionId();
+    public SessionException(String msg){
+        super(msg);
+    }
+    
+    public SessionException(Exception cause){
+        super(cause);
+    }
+
+    public SessionException(String msg, Exception cause){
+        super(msg, cause);
+    }
+
 
 }

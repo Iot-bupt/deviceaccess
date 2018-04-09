@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.common.msg.aware;
+package com.bupt.deviceaccess.common.msg.session;
 
-import com.bupt.deviceaccess.common.data.id.SessionId;
+import com.bupt.deviceaccess.common.msg.aware.SessionAwareMsg;
 
-public interface SessionAwareMsg {
+public interface SessionContext extends SessionAwareMsg {
 
-    SessionId getSessionId();
+    SessionType getSessionType();
+
+    //void onMsg(SessionActorToAdaptorMsg msg) throws SessionException;
+
+    //void onMsg(SessionCtrlMsg msg) throws SessionException;
+
+    boolean isClosed();
+
+    long getTimeout();
 
 }
