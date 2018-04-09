@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt;
+package com.bupt.deviceaccess.transport.mqtt;
 
+import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.ssl.SslHandler;
+import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
+import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
+/**
 import org.thingsboard.server.common.transport.SessionMsgProcessor;
 import org.thingsboard.server.common.transport.auth.DeviceAuthService;
 import org.thingsboard.server.dao.device.DeviceService;
 import org.thingsboard.server.dao.relation.RelationService;
-import combupt.devicemanage.transport.mqtt.adaptors.MqttTransportAdaptor;
+**/
 
 /**
  * @author Andrew Shvayka
@@ -34,20 +38,27 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
 
     private static final int MAX_PAYLOAD_SIZE = 64 * 1024 * 1024;
 
-    private final SessionMsgProcessor processor;
+    /**
     private final DeviceService deviceService;
-    private final DeviceAuthService authService;
+
     private final RelationService relationService;
+     **/
+    private final SessionMsgProcessor processor;
+    private final DeviceAuthService authService;
     private final MqttTransportAdaptor adaptor;
     private final MqttSslHandlerProvider sslHandlerProvider;
 
-    public MqttTransportServerInitializer(SessionMsgProcessor processor, DeviceService deviceService, DeviceAuthService authService, RelationService relationService,
+    public MqttTransportServerInitializer(SessionMsgProcessor processor, DeviceAuthService authService,
                                           MqttTransportAdaptor adaptor,
                                           MqttSslHandlerProvider sslHandlerProvider) {
+        /**
         this.processor = processor;
         this.deviceService = deviceService;
         this.authService = authService;
         this.relationService = relationService;
+         **/
+        this.authService = authService;
+        this.processor = processor;
         this.adaptor = adaptor;
         this.sslHandlerProvider = sslHandlerProvider;
     }
@@ -61,9 +72,9 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
             pipeline.addLast(sslHandler);
         }
         pipeline.addLast("decoder", new MqttDecoder(MAX_PAYLOAD_SIZE));
-        pipeline.addLast("encoder", MqttEncoder.INSTANCE);
+        pipeline.addLast("encoder", MqttEncoder.DEFAUL_ENCODER);
 
-        MqttTransportHandler handler = new MqttTransportHandler(processor, deviceService, authService, relationService, adaptor, sslHandler);
+        MqttTransportHandler handler = new MqttTransportHandler(adaptor, sslHandler);
         pipeline.addLast(handler);
         ch.closeFuture().addListener(handler);
     }

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.transport.mqtt.adaptors;
 
+import com.bupt.deviceaccess.transport.mqtt.MqttTopics;
+import com.bupt.deviceaccess.transport.mqtt.MqttTransportHandler;
+import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import combupt.devicemanage.transport.mqtt.MqttTopics;
-import combupt.devicemanage.transport.mqtt.MqttTransportHandler;
-import combupt.devicemanage.transport.mqtt.session.DeviceSessionCtx;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -44,6 +44,7 @@ import java.util.Set;
 /**
  * @author Andrew Shvayka
  */
+@SuppressWarnings({"ALL", "Since15"})
 @Component("JsonMqttAdaptor")
 @Slf4j
 public class JsonMqttAdaptor implements MqttTransportAdaptor {
@@ -90,6 +91,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
         return new BasicAdaptorToSessionActorMsg(ctx, msg);
     }
 
+    @SuppressWarnings("Since15")
     @Override
     public Optional<MqttMessage> convertToAdaptorMsg(DeviceSessionCtx ctx, SessionActorToAdaptorMsg sessionMsg) throws AdaptorException {
         MqttMessage result = null;
@@ -98,11 +100,14 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             case STATUS_CODE_RESPONSE:
             case GET_ATTRIBUTES_RESPONSE:
                 ResponseMsg<?> responseMsg = (ResponseMsg) msg;
-                Optional<Exception> responseError = responseMsg.getError();
+                //noinspection Since15
+                @SuppressWarnings("Since15") Optional<Exception> responseError = responseMsg.getError();
                 if (responseMsg.isSuccess()) {
                     result = convertResponseMsg(ctx, msg, responseMsg, responseError);
                 } else {
+                    //noinspection Since15
                     if (responseError.isPresent()) {
+                        //noinspection Since15
                         throw new AdaptorException(responseError.get());
                     }
                 }
@@ -128,11 +133,13 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             default:
                 break;
         }
+        //noinspection Since15
         return Optional.ofNullable(result);
     }
 
+    @SuppressWarnings("Since15")
     private MqttMessage convertResponseMsg(DeviceSessionCtx ctx, ToDeviceMsg msg,
-                                           ResponseMsg<?> responseMsg, Optional<Exception> responseError) throws AdaptorException {
+                                           ResponseMsg<?> responseMsg, @SuppressWarnings("Since15") Optional<Exception> responseError) throws AdaptorException {
         MqttMessage result = null;
         MsgType requestMsgType = responseMsg.getRequestMsgType();
         Integer requestId = responseMsg.getRequestId();
@@ -141,13 +148,18 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
                 result = MqttTransportHandler.createMqttPubAckMsg(requestId);
             } else if (requestMsgType == MsgType.GET_ATTRIBUTES_REQUEST) {
                 GetAttributesResponse response = (GetAttributesResponse) msg;
-                Optional<AttributesKVMsg> responseData = response.getData();
+                //noinspection Since15
+                @SuppressWarnings("Since15") Optional<AttributesKVMsg> responseData = response.getData();
+                //noinspection Since15
                 if (response.isSuccess() && responseData.isPresent()) {
+                    //noinspection Since15
                     result = createMqttPublishMsg(ctx,
                             MqttTopics.DEVICE_ATTRIBUTES_RESPONSE_TOPIC_PREFIX + requestId,
                             responseData.get(), true);
                 } else {
+                    //noinspection Since15
                     if (responseError.isPresent()) {
+                        //noinspection Since15
                         throw new AdaptorException(responseError.get());
                     }
                 }

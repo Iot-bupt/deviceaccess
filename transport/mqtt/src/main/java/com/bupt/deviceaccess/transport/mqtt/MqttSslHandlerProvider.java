@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt;
+package com.bupt.deviceaccess.transport.mqtt;
 
 import com.google.common.io.Resources;
-import combupt.devicemanage.transport.mqtt.util.SslUtil;
+import com.bupt.deviceaccess.transport.mqtt.util.SslUtil;
 import io.netty.handler.ssl.SslHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

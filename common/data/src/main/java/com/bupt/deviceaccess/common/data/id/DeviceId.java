@@ -15,13 +15,12 @@
  */
 package com.bupt.deviceaccess.common.data.id;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DeviceId extends UUIDBased implements EntityId {
+import java.util.UUID;
+
+public class DeviceId extends UUIDBased {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,9 +33,4 @@ public class DeviceId extends UUIDBased implements EntityId {
         return new DeviceId(UUID.fromString(deviceId));
     }
 
-    @JsonIgnore
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.DEVICE;
-    }
 }

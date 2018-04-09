@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt.util;
+package com.bupt.deviceaccess.transport.mqtt.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Base64Utils;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.transport.mqtt.adaptors;
 
-import combupt.devicemanage.transport.mqtt.session.DeviceSessionCtx;
+import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import org.thingsboard.server.common.transport.TransportAdaptor;
 

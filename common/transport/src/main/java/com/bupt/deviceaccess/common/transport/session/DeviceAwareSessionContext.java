@@ -15,19 +15,20 @@
  */
 package com.bupt.deviceaccess.common.transport.session;
 
-import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
 import lombok.extern.slf4j.Slf4j;
 import com.bupt.deviceaccess.common.data.Device;
 import com.bupt.deviceaccess.common.data.security.DeviceCredentialsFilter;
-import org.thingsboard.server.common.msg.session.SessionContext;
+import com.bupt.deviceaccess.common.msg.session.SessionContext;
 import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
 import com.bupt.deviceaccess.common.transport.auth.DeviceAuthResult;
+import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
 
 import java.util.Optional;
 
 /**
  * @author Andrew Shvayka
  */
+@SuppressWarnings("ALL")
 @Slf4j
 public abstract class DeviceAwareSessionContext implements SessionContext {
 
@@ -47,11 +48,15 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
     }
 
 
+    @SuppressWarnings("Since15")
     public boolean login(DeviceCredentialsFilter credentials) {
         DeviceAuthResult result = authService.process(credentials);
         if (result.isSuccess()) {
-            Optional<Device> deviceOpt = authService.findDeviceById(result.getDeviceId());
+            //noinspection Since15
+            @SuppressWarnings("Since15") Optional<Device> deviceOpt = authService.findDeviceById(result.getDeviceId());
+            //noinspection Since15
             if (deviceOpt.isPresent()) {
+                //noinspection Since15
                 device = deviceOpt.get();
             }
             return true;

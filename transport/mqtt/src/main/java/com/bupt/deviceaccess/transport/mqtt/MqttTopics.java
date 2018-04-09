@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt;
+package com.bupt.deviceaccess.transport.mqtt;
 
 /**
  * Created by ashvayka on 19.01.17.

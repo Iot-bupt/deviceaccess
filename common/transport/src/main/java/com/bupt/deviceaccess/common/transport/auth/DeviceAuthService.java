@@ -21,10 +21,12 @@ import com.bupt.deviceaccess.common.data.security.DeviceCredentialsFilter;
 
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 public interface DeviceAuthService {
 
     DeviceAuthResult process(DeviceCredentialsFilter credentials);
 
+    @SuppressWarnings("Since15")
     Optional<Device> findDeviceById(DeviceId deviceId);
 
 }

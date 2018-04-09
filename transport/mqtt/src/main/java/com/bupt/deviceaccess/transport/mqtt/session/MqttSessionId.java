@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt.session;
+package com.bupt.deviceaccess.transport.mqtt.session;
 
 import org.thingsboard.server.common.data.id.SessionId;
 

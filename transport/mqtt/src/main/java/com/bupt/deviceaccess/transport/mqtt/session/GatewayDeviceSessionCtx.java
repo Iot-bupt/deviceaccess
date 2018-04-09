@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt.session;
+package com.bupt.deviceaccess.transport.mqtt.session;
 
+import com.bupt.deviceaccess.transport.mqtt.MqttTopics;
+import com.bupt.deviceaccess.transport.mqtt.MqttTransportHandler;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import combupt.devicemanage.transport.mqtt.MqttTopics;
-import combupt.devicemanage.transport.mqtt.MqttTransportHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -44,6 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by ashvayka on 19.01.17.
  */
+@SuppressWarnings({"ALL", "Since15"})
 public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
 
     private static final Gson GSON = new Gson();
@@ -72,12 +73,16 @@ public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
         return SessionType.ASYNC;
     }
 
+    @SuppressWarnings("Since15")
     @Override
     public void onMsg(SessionActorToAdaptorMsg sessionMsg) throws SessionException {
-        Optional<MqttMessage> message = getToDeviceMsg(sessionMsg);
+        //noinspection Since15
+        @SuppressWarnings("Since15") Optional<MqttMessage> message = getToDeviceMsg(sessionMsg);
+        //noinspection Since15
         message.ifPresent(parent::writeAndFlush);
     }
 
+    @SuppressWarnings("Since15")
     private Optional<MqttMessage> getToDeviceMsg(SessionActorToAdaptorMsg sessionMsg) {
         ToDeviceMsg msg = sessionMsg.getMsg();
         switch (msg.getMsgType()) {
@@ -87,6 +92,7 @@ public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
                     MsgType requestMsgType = responseMsg.getRequestMsgType();
                     Integer requestId = responseMsg.getRequestId();
                     if (requestId >= 0 && requestMsgType == MsgType.POST_ATTRIBUTES_REQUEST || requestMsgType == MsgType.POST_TELEMETRY_REQUEST) {
+                        //noinspection Since15
                         return Optional.of(MqttTransportHandler.createMqttPubAckMsg(requestId));
                     }
                 }
@@ -94,6 +100,7 @@ public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
             case GET_ATTRIBUTES_RESPONSE:
                 GetAttributesResponse response = (GetAttributesResponse) msg;
                 if (response.isSuccess()) {
+                    //noinspection Since15
                     return Optional.of(createMqttPublishMsg(MqttTopics.GATEWAY_ATTRIBUTES_RESPONSE_TOPIC, response));
                 } else {
                     //TODO: push error handling to the gateway
@@ -101,13 +108,16 @@ public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
                 break;
             case ATTRIBUTES_UPDATE_NOTIFICATION:
                 AttributesUpdateNotification notification = (AttributesUpdateNotification) msg;
+                //noinspection Since15
                 return Optional.of(createMqttPublishMsg(MqttTopics.GATEWAY_ATTRIBUTES_TOPIC, notification.getData()));
             case TO_DEVICE_RPC_REQUEST:
                 ToDeviceRpcRequestMsg rpcRequest = (ToDeviceRpcRequestMsg) msg;
+                //noinspection Since15
                 return Optional.of(createMqttPublishMsg(MqttTopics.GATEWAY_RPC_TOPIC, rpcRequest));
             default:
                 break;
         }
+        //noinspection Since15
         return Optional.empty();
     }
 
@@ -130,13 +140,17 @@ public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
         return 0;
     }
 
+    @SuppressWarnings("Since15")
     private MqttMessage createMqttPublishMsg(String topic, GetAttributesResponse response) {
         JsonObject result = new JsonObject();
         result.addProperty("id", response.getRequestId());
         result.addProperty(DEVICE_PROPERTY, device.getName());
-        Optional<AttributesKVMsg> responseData = response.getData();
+        //noinspection Since15
+        @SuppressWarnings("Since15") Optional<AttributesKVMsg> responseData = response.getData();
+        //noinspection Since15
         if (responseData.isPresent()) {
-            AttributesKVMsg msg = responseData.get();
+            //noinspection Since15
+            @SuppressWarnings("Since15") AttributesKVMsg msg = responseData.get();
             if (msg.getClientAttributes() != null) {
                 addValues(result, msg.getClientAttributes());
             }
@@ -147,6 +161,7 @@ public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
         return createMqttPublishMsg(topic, result);
     }
 
+    @SuppressWarnings("Since15")
     private void addValues(JsonObject result, List<AttributeKvEntry> kvList) {
         if (kvList.size() == 1) {
             addValueToJson(result, "value", kvList.get(0));
@@ -158,6 +173,7 @@ public class GatewayDeviceSessionCtx extends DeviceAwareSessionContext {
                 values = new JsonObject();
                 result.add("values", values);
             }
+            //noinspection Since15
             kvList.forEach(value -> addValueToJson(values, value.getKey(), value));
         }
     }

@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt.session;
+package com.bupt.deviceaccess.transport.mqtt.session;
 
+import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.*;
 import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.server.common.data.id.SessionId;
+import com.bupt.deviceaccess.common.data.id.SessionId;
 import org.thingsboard.server.common.msg.session.SessionActorToAdaptorMsg;
 import org.thingsboard.server.common.msg.session.SessionCtrlMsg;
-import org.thingsboard.server.common.msg.session.SessionType;
+import com.bupt.deviceaccess.common.msg.session.SessionType;
 import org.thingsboard.server.common.msg.session.ctrl.SessionCloseMsg;
 import org.thingsboard.server.common.msg.session.ex.SessionException;
-import org.thingsboard.server.common.transport.SessionMsgProcessor;
-import org.thingsboard.server.common.transport.adaptor.AdaptorException;
-import org.thingsboard.server.common.transport.auth.DeviceAuthService;
-import org.thingsboard.server.common.transport.session.DeviceAwareSessionContext;
-import combupt.devicemanage.transport.mqtt.adaptors.MqttTransportAdaptor;
+import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
+import com.bupt.deviceaccess.common.transport.adaptor.AdaptorException;
+import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
+import com.bupt.deviceaccess.common.transport.session.DeviceAwareSessionContext;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

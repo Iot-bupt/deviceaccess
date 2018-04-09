@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt.session;
+package com.bupt.deviceaccess.transport.mqtt.session;
 
+import com.bupt.deviceaccess.transport.mqtt.MqttTransportHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import combupt.devicemanage.transport.mqtt.MqttTransportHandler;
-import combupt.devicemanage.transport.mqtt.adaptors.JsonMqttAdaptor;
+import com.bupt.deviceaccess.transport.mqtt.adaptors.JsonMqttAdaptor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
 /**
  * Created by ashvayka on 19.01.17.
  */
+@SuppressWarnings({"ALL", "Since15"})
 @Slf4j
 public class GatewaySessionCtx {
 
@@ -80,10 +81,13 @@ public class GatewaySessionCtx {
         ack(msg);
     }
 
+    @SuppressWarnings("Since15")
     private void onDeviceConnect(String deviceName, String deviceType) {
         if (!devices.containsKey(deviceName)) {
-            Optional<Device> deviceOpt = deviceService.findDeviceByTenantIdAndName(gateway.getTenantId(), deviceName);
-            Device device = deviceOpt.orElseGet(() -> {
+            //noinspection Since15
+            @SuppressWarnings("Since15") Optional<Device> deviceOpt = deviceService.findDeviceByTenantIdAndName(gateway.getTenantId(), deviceName);
+            //noinspection Since15
+            @SuppressWarnings("Since15") Device device = deviceOpt.orElseGet(() -> {
                 Device newDevice = new Device();
                 newDevice.setTenantId(gateway.getTenantId());
                 newDevice.setName(deviceName);
@@ -114,7 +118,9 @@ public class GatewaySessionCtx {
         ack(msg);
     }
 
+    @SuppressWarnings("Since15")
     public void onGatewayDisconnect() {
+        //noinspection Since15
         devices.forEach((k, v) -> {
             processor.process(SessionCloseMsg.onDisconnect(v.getSessionId()));
         });
@@ -160,6 +166,7 @@ public class GatewaySessionCtx {
     }
 
 
+    @SuppressWarnings("Since15")
     public void onDeviceAttributes(MqttPublishMessage mqttMsg) throws AdaptorException {
         JsonElement json = JsonMqttAdaptor.validateJsonPayload(gatewaySessionId, mqttMsg.payload());
         int requestId = mqttMsg.variableHeader().messageId();
@@ -173,6 +180,7 @@ public class GatewaySessionCtx {
                 long ts = System.currentTimeMillis();
                 BasicUpdateAttributesRequest request = new BasicUpdateAttributesRequest(requestId);
                 JsonObject deviceData = deviceEntry.getValue().getAsJsonObject();
+                //noinspection Since15
                 request.add(JsonConverter.parseValues(deviceData).stream().map(kv -> new BaseAttributeKvEntry(kv, ts)).collect(Collectors.toList()));
                 GatewayDeviceSessionCtx deviceSessionCtx = devices.get(deviceName);
                 processor.process(new BasicToDeviceActorSessionMsg(deviceSessionCtx.getDevice(),

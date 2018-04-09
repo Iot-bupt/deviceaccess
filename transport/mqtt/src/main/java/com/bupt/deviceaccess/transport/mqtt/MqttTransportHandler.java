@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package combupt.devicemanage.transport.mqtt;
+package com.bupt.deviceaccess.transport.mqtt;
 
+import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
+import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
 import com.fasterxml.jackson.databind.JsonNode;
-import combupt.devicemanage.transport.mqtt.util.SslUtil;
+import com.bupt.deviceaccess.transport.mqtt.util.SslUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.mqtt.*;
@@ -26,25 +28,22 @@ import io.netty.util.concurrent.GenericFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.thingsboard.server.common.data.Device;
-import org.thingsboard.server.common.data.security.DeviceTokenCredentials;
+import com.bupt.deviceaccess.common.data.security.DeviceTokenCredentials;
 import org.thingsboard.server.common.data.security.DeviceX509Credentials;
 import org.thingsboard.server.common.msg.session.AdaptorToSessionActorMsg;
 import org.thingsboard.server.common.msg.session.BasicToDeviceActorSessionMsg;
 import org.thingsboard.server.common.msg.session.ctrl.SessionCloseMsg;
-import org.thingsboard.server.common.transport.SessionMsgProcessor;
+import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
 import org.thingsboard.server.common.transport.adaptor.AdaptorException;
-import org.thingsboard.server.common.transport.auth.DeviceAuthService;
+import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
 import org.thingsboard.server.dao.EncryptionUtil;
 import org.thingsboard.server.dao.device.DeviceService;
 import org.thingsboard.server.dao.relation.RelationService;
-import combupt.devicemanage.transport.mqtt.adaptors.MqttTransportAdaptor;
-import combupt.devicemanage.transport.mqtt.session.DeviceSessionCtx;
-import combupt.devicemanage.transport.mqtt.session.GatewaySessionCtx;
+import com.bupt.deviceaccess.transport.mqtt.session.GatewaySessionCtx;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.security.cert.X509Certificate;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.*;
@@ -64,20 +63,25 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private final String sessionId;
     private final MqttTransportAdaptor adaptor;
     private final SessionMsgProcessor processor;
-    private final DeviceService deviceService;
     private final DeviceAuthService authService;
+    /**
+    private final DeviceService deviceService;
     private final RelationService relationService;
+     **/
     private final SslHandler sslHandler;
     private volatile boolean connected;
     private volatile InetSocketAddress address;
     private volatile GatewaySessionCtx gatewaySessionCtx;
 
-    public MqttTransportHandler(SessionMsgProcessor processor, DeviceService deviceService, DeviceAuthService authService, RelationService relationService,
+    public MqttTransportHandler(SessionMsgProcessor processor,DeviceAuthService authService,
                                 MqttTransportAdaptor adaptor, SslHandler sslHandler) {
-        this.processor = processor;
+        /**
+
         this.deviceService = deviceService;
         this.relationService = relationService;
+         **/
         this.authService = authService;
+        this.processor = processor;
         this.adaptor = adaptor;
         this.deviceSessionCtx = new DeviceSessionCtx(processor, authService, adaptor);
         this.sessionId = deviceSessionCtx.getSessionId().toUidStr();
@@ -86,7 +90,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        log.trace("[{}] Processing msg: {}", sessionId, msg);
+        //log.trace("[{}] Processing msg: {}", sessionId, msg);
         if (msg instanceof MqttMessage) {
             processMqttMsg(ctx, (MqttMessage) msg);
         }
@@ -95,7 +99,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private void processMqttMsg(ChannelHandlerContext ctx, MqttMessage msg) {
         address = (InetSocketAddress) ctx.channel().remoteAddress();
         if (msg.fixedHeader() == null) {
-            log.info("[{}:{}] Invalid message received", address.getHostName(), address.getPort());
+            //log.info("[{}:{}] Invalid message received", address.getHostName(), address.getPort());
             processDisconnect(ctx);
         } else {
             deviceSessionCtx.setChannel(ctx);
@@ -106,6 +110,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 case PUBLISH:
                     processPublish(ctx, (MqttPublishMessage) msg);
                     break;
+                /**
                 case SUBSCRIBE:
                     processSubscribe(ctx, (MqttSubscribeMessage) msg);
                     break;
@@ -124,6 +129,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                     break;
                 default:
                     break;
+                 **/
             }
         }
     }
@@ -134,7 +140,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
         String topicName = mqttMsg.variableHeader().topicName();
         int msgId = mqttMsg.variableHeader().messageId();
-        log.trace("[{}] Processing publish msg [{}][{}]!", sessionId, topicName, msgId);
+        //log.trace("[{}] Processing publish msg [{}][{}]!", sessionId, topicName, msgId);
 
         if (topicName.startsWith(MqttTopics.BASE_GATEWAY_API_TOPIC)) {
             if (gatewaySessionCtx != null) {
@@ -162,7 +168,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 gatewaySessionCtx.onDeviceDisconnect(mqttMsg);
             }
         } catch (RuntimeException | AdaptorException e) {
-            log.warn("[{}] Failed to process publish msg [{}][{}]", sessionId, topicName, msgId, e);
+            //log.warn("[{}] Failed to process publish msg [{}][{}]", sessionId, topicName, msgId, e);
         }
     }
 
@@ -199,7 +205,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             ctx.close();
         }
     }
-
+/**
     private void processSubscribe(ChannelHandlerContext ctx, MqttSubscribeMessage mqttMsg) {
         if (!checkConnected(ctx)) {
             return;
@@ -265,15 +271,15 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         MqttMessageIdVariableHeader mqttMessageIdVariableHeader = MqttMessageIdVariableHeader.from(msgId);
         return new MqttMessage(mqttFixedHeader, mqttMessageIdVariableHeader);
     }
-
+**/
     private void processConnect(ChannelHandlerContext ctx, MqttConnectMessage msg) {
-        log.info("[{}] Processing connect msg for client: {}!", sessionId, msg.payload().clientIdentifier());
-        X509Certificate cert;
-        if (sslHandler != null && (cert = getX509Certificate()) != null) {
-            processX509CertConnect(ctx, cert);
-        } else {
+        //log.info("[{}] Processing connect msg for client: {}!", sessionId, msg.payload().clientIdentifier());
+       // X509Certificate cert;
+        //if (sslHandler != null && (cert = getX509Certificate()) != null) {
+          //  processX509CertConnect(ctx, cert);
+        //} else {
             processAuthTokenConnect(ctx, msg);
-        }
+        //}
     }
 
     private void processAuthTokenConnect(ChannelHandlerContext ctx, MqttConnectMessage msg) {
@@ -290,7 +296,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             checkGatewaySession();
         }
     }
-
+/**
     private void processX509CertConnect(ChannelHandlerContext ctx, X509Certificate cert) {
         try {
             String strCert = SslUtil.getX509CertificateString(cert);
@@ -316,12 +322,12 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 return certChain[0];
             }
         } catch (SSLPeerUnverifiedException e) {
-            log.warn(e.getMessage());
+            //log.warn(e.getMessage());
             return null;
         }
         return null;
     }
-
+**/
     private void processDisconnect(ChannelHandlerContext ctx) {
         ctx.close();
         if (connected) {
@@ -336,7 +342,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         MqttFixedHeader mqttFixedHeader =
                 new MqttFixedHeader(CONNACK, false, AT_MOST_ONCE, false, 0);
         MqttConnAckVariableHeader mqttConnAckVariableHeader =
-                new MqttConnAckVariableHeader(returnCode, true);
+                new MqttConnAckVariableHeader(returnCode);
         return new MqttConnAckMessage(mqttFixedHeader, mqttConnAckVariableHeader);
     }
 
@@ -347,7 +353,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("[{}] Unexpected Exception", sessionId, cause);
+        //log.error("[{}] Unexpected Exception", sessionId, cause);
         ctx.close();
     }
 
@@ -375,7 +381,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         if (connected) {
             return true;
         } else {
-            log.info("[{}] Closing current session due to invalid msg order [{}][{}]", sessionId);
+            //log.info("[{}] Closing current session due to invalid msg order [{}][{}]", sessionId);
             ctx.close();
             return false;
         }

@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://F:\eclipse workspace\deviceaccess\common\comTransport.iml" filepath="F:\eclipse workspace\deviceaccess\common\comTransport.iml" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/devicemanage.iml" filepath="$PROJECT_DIR$/devicemanage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/deviceaccess.iml" filepath="$PROJECT_DIR$/deviceaccess.iml" />
+      <module fileurl="file://F:\eclipse workspace\deviceaccess\common\message.iml" filepath="F:\eclipse workspace\deviceaccess\common\message.iml" />
       <module fileurl="file://$PROJECT_DIR$/transport/mqtt/mqtt.iml" filepath="$PROJECT_DIR$/transport/mqtt/mqtt.iml" />
       <module fileurl="file://$PROJECT_DIR$/transport/transport.iml" filepath="$PROJECT_DIR$/transport/transport.iml" />
     </modules>
