@@ -20,11 +20,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.*;
 import lombok.extern.slf4j.Slf4j;
 import com.bupt.deviceaccess.common.data.id.SessionId;
-import org.thingsboard.server.common.msg.session.SessionActorToAdaptorMsg;
-import org.thingsboard.server.common.msg.session.SessionCtrlMsg;
+//import org.thingsboard.server.common.msg.session.SessionActorToAdaptorMsg;
+import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
 import com.bupt.deviceaccess.common.msg.session.SessionType;
-import org.thingsboard.server.common.msg.session.ctrl.SessionCloseMsg;
-import org.thingsboard.server.common.msg.session.ex.SessionException;
+import com.bupt.deviceaccess.common.msg.session.ctrl.SessionCloseMsg;
+import com.bupt.deviceaccess.common.msg.session.ex.SessionException;
 import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
 import com.bupt.deviceaccess.common.transport.adaptor.AdaptorException;
 import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
@@ -55,6 +55,7 @@ public class DeviceSessionCtx extends DeviceAwareSessionContext {
         return SessionType.ASYNC;
     }
 
+    /**
     @Override
     public void onMsg(SessionActorToAdaptorMsg msg) throws SessionException {
         try {
@@ -64,9 +65,10 @@ public class DeviceSessionCtx extends DeviceAwareSessionContext {
             logAndWrap(e);
         }
     }
+    **/
 
     private void logAndWrap(AdaptorException e) throws SessionException {
-        log.warn("Failed to convert msg: {}", e.getMessage(), e);
+        //log.warn("Failed to convert msg: {}", e.getMessage(), e);
         throw new SessionException(e);
     }
 
@@ -94,7 +96,7 @@ public class DeviceSessionCtx extends DeviceAwareSessionContext {
 
     @Override
     public SessionId getSessionId() {
-        return sessionId;
+        return (SessionId) sessionId;
     }
 
     public void setChannel(ChannelHandlerContext channel) {

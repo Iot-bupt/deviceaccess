@@ -8,6 +8,7 @@
   <modules>
     <module>transport</module>
     <module>common</module>
+      <module>application</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -22,6 +23,8 @@
     <spring.version>4.3.4.RELEASE</spring.version>
     <spring-security.version>4.2.0.RELEASE</spring-security.version>
     <gson.version>2.6.2</gson.version>
+    <akka.version>2.4.2</akka.version>
+    <scala.version>2.11</scala.version>
   </properties>
 
   <build>
@@ -120,6 +123,16 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>${gson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-actor_${scala.version}</artifactId>
+      <version>${akka.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-slf4j_${scala.version}</artifactId>
+      <version>${akka.version}</version>
     </dependency>
   </dependencies>
 </project>

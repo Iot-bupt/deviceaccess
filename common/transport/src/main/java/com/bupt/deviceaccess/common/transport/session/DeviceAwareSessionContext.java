@@ -15,6 +15,8 @@
  */
 package com.bupt.deviceaccess.common.transport.session;
 
+import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
+import com.bupt.deviceaccess.common.msg.session.ex.SessionException;
 import lombok.extern.slf4j.Slf4j;
 import com.bupt.deviceaccess.common.data.Device;
 import com.bupt.deviceaccess.common.data.security.DeviceCredentialsFilter;
@@ -77,4 +79,6 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
     public Device getDevice() {
         return device;
     }
+
+    public abstract void onMsg(SessionCtrlMsg msg) throws SessionException;
 }

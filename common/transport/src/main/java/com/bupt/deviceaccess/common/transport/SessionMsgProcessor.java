@@ -16,11 +16,9 @@
 package com.bupt.deviceaccess.common.transport;
 
 import com.bupt.deviceaccess.common.msg.aware.SessionAwareMsg;
-import com.bupt.deviceaccess.common.msg.device.DeviceRecognitionMsg;
 
 public interface SessionMsgProcessor {
 
-    public void onMsg(DeviceRecognitionMsg msg);
+//    public void onMsg(DeviceRecognitionMsg msg);
     void process(SessionAwareMsg msg);
-
 }
