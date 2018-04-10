@@ -13,14 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.data.kv;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import java.io.Serializable;
+import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * Represents attribute or any other KV data entry
+ *
+ * @author ashvayka
  */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+public interface KvEntry extends Serializable {
+
+    String getKey();
+
+    DataType getDataType();
+
+    Optional<String> getStrValue();
+
+    Optional<Long> getLongValue();
+
+    Optional<Boolean> getBooleanValue();
+
+    Optional<Double> getDoubleValue();
+
+    String getValueAsString();
+
+    Object getValue();
 }

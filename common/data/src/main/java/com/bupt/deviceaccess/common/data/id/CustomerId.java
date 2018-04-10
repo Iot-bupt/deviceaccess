@@ -13,14 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.data.id;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author Andrew Shvayka
- */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+import java.util.UUID;
+
+//import org.thingsboard.server.common.data.EntityType;
+
+public final class CustomerId extends UUIDBased{
+
+    private static final long serialVersionUID = 1L;
+
+    @JsonCreator
+    public CustomerId(@JsonProperty("id") UUID id) {
+        super(id);
+    }
+
+    /**
+    @JsonIgnore
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.CUSTOMER;
+    }
+    **/
 }

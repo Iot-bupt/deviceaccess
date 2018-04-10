@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.msg.core;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import com.bupt.deviceaccess.common.data.kv.AttributeKvEntry;
+import com.bupt.deviceaccess.common.msg.session.FromDeviceRequestMsg;
 
-/**
- * @author Andrew Shvayka
- */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+import java.util.Set;
+
+public interface UpdateAttributesRequest extends FromDeviceRequestMsg {
+
+    Set<AttributeKvEntry> getAttributes();
+
 }

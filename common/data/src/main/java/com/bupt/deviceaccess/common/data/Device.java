@@ -18,7 +18,7 @@ package com.bupt.deviceaccess.common.data;
 import com.bupt.deviceaccess.common.data.id.TenantId;
 import lombok.EqualsAndHashCode;
 import com.bupt.deviceaccess.common.data.id.DeviceId;
-
+import com.bupt.deviceaccess.common.data.id.CustomerId;
 import com.fasterxml.jackson.databind.JsonNode;
 
 @EqualsAndHashCode(callSuper = true)

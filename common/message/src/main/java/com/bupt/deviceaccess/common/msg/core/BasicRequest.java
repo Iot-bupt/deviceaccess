@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.msg.core;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import java.io.Serializable;
 
 /**
  * @author Andrew Shvayka
  */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+public class BasicRequest implements Serializable {
+
+    public static final Integer DEFAULT_REQUEST_ID = 0;
+
+    private final Integer requestId;
+
+    public BasicRequest(Integer requestId) {
+        this.requestId = requestId;
+    }
+
+    public Integer getRequestId() {
+        return requestId;
+    }
 }

@@ -15,8 +15,12 @@
  */
 package com.bupt.deviceaccess.transport.mqtt.adaptors;
 
-import com.bupt.deviceaccess.transport.mqtt.MqttTopics;
-import com.bupt.deviceaccess.transport.mqtt.MqttTransportHandler;
+import com.bupt.deviceaccess.common.data.id.SessionId;
+import com.bupt.deviceaccess.common.msg.core.TelemetryUploadRequest;
+import com.bupt.deviceaccess.common.msg.core.UpdateAttributesRequest;
+import com.bupt.deviceaccess.common.msg.session.*;
+import com.bupt.deviceaccess.common.transport.adaptor.AdaptorException;
+import com.bupt.deviceaccess.common.transport.adaptor.JsonConverter;
 import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -25,20 +29,14 @@ import com.google.gson.JsonSyntaxException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
-import io.netty.handler.codec.mqtt.*;
+import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.thingsboard.server.common.data.id.SessionId;
-import org.thingsboard.server.common.msg.core.*;
-import org.thingsboard.server.common.msg.kv.AttributesKVMsg;
-import org.thingsboard.server.common.msg.session.*;
-import org.thingsboard.server.common.transport.adaptor.AdaptorException;
-import org.thingsboard.server.common.transport.adaptor.JsonConverter;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -55,7 +53,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
 
     @Override
     public AdaptorToSessionActorMsg convertToActorMsg(DeviceSessionCtx ctx, MsgType type, MqttMessage inbound) throws AdaptorException {
-        FromDeviceMsg msg;
+        FromDeviceMsg msg=null;
         switch (type) {
             case POST_TELEMETRY_REQUEST:
                 msg = convertToTelemetryUploadRequest(ctx, (MqttPublishMessage) inbound);
@@ -63,6 +61,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             case POST_ATTRIBUTES_REQUEST:
                 msg = convertToUpdateAttributesRequest(ctx, (MqttPublishMessage) inbound);
                 break;
+            /**
             case SUBSCRIBE_ATTRIBUTES_REQUEST:
                 msg = new AttributesSubscribeMsg();
                 break;
@@ -87,10 +86,12 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             default:
                 log.warn("[{}] Unsupported msg type: {}!", ctx.getSessionId(), type);
                 throw new AdaptorException(new IllegalArgumentException("Unsupported msg type: " + type + "!"));
+             **/
         }
         return new BasicAdaptorToSessionActorMsg(ctx, msg);
     }
 
+    /**
     @SuppressWarnings("Since15")
     @Override
     public Optional<MqttMessage> convertToAdaptorMsg(DeviceSessionCtx ctx, SessionActorToAdaptorMsg sessionMsg) throws AdaptorException {
@@ -136,6 +137,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
         //noinspection Since15
         return Optional.ofNullable(result);
     }
+
 
     @SuppressWarnings("Since15")
     private MqttMessage convertResponseMsg(DeviceSessionCtx ctx, ToDeviceMsg msg,
@@ -221,6 +223,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    **/
 
     private Set<String> toStringSet(JsonElement requestBody, String name) {
         JsonElement element = requestBody.getAsJsonObject().get(name);
@@ -249,6 +252,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
         }
     }
 
+    /**
     private FromDeviceMsg convertToServerRpcRequest(DeviceSessionCtx ctx, MqttPublishMessage inbound) throws AdaptorException {
         String topicName = inbound.variableHeader().topicName();
         String payload = validatePayload(ctx.getSessionId(), inbound.payload());
@@ -259,6 +263,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    **/
 
     public static JsonElement validateJsonPayload(SessionId sessionId, ByteBuf payloadData) throws AdaptorException {
         String payload = validatePayload(sessionId, payloadData);
@@ -273,7 +278,7 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
         try {
             String payload = payloadData.toString(UTF8);
             if (payload == null) {
-                log.warn("[{}] Payload is empty!", sessionId.toUidStr());
+                //log.warn("[{}] Payload is empty!", sessionId.toUidStr());
                 throw new AdaptorException(new IllegalArgumentException("Payload is empty!"));
             }
             return payload;

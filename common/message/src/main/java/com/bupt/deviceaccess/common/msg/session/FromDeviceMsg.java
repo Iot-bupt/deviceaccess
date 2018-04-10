@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.msg.session;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import java.io.Serializable;
 
-/**
- * @author Andrew Shvayka
- */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+public interface FromDeviceMsg extends Serializable {
+
+    MsgType getMsgType();
+
 }

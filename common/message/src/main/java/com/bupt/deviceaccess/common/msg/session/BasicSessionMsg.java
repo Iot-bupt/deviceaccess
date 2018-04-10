@@ -13,14 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.msg.session;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import com.bupt.deviceaccess.common.data.id.SessionId;
 
-/**
- * @author Andrew Shvayka
- */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+public class BasicSessionMsg implements SessionMsg {
+
+    private final SessionContext ctx;
+
+    public BasicSessionMsg(SessionContext ctx) {
+        super();
+        this.ctx = ctx;
+    }
+
+    @Override
+    public SessionId getSessionId() {
+        return ctx.getSessionId();
+    }
+
+    @Override
+    public SessionContext getSessionContext() {
+        return ctx;
+    }
+
+    @Override
+    public String toString() {
+        return "BasicSessionMsg [ctx=" + ctx + "]";
+    }
+
 }

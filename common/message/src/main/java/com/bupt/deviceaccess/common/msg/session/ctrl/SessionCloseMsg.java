@@ -15,8 +15,8 @@
  */
 package com.bupt.deviceaccess.common.msg.session.ctrl;
 
-import org.thingsboard.server.common.data.id.SessionId;
-import org.thingsboard.server.common.msg.session.SessionCtrlMsg;
+import com.bupt.deviceaccess.common.data.id.SessionId;
+import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
 
 public class SessionCloseMsg implements SessionCtrlMsg {
 

@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.transport;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import com.bupt.deviceaccess.common.msg.session.AdaptorToSessionActorMsg;
+import com.bupt.deviceaccess.common.msg.session.MsgType;
+import com.bupt.deviceaccess.common.msg.session.SessionContext;
+import com.bupt.deviceaccess.common.transport.adaptor.AdaptorException;
 
-/**
- * @author Andrew Shvayka
- */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+public interface TransportAdaptor<C extends SessionContext, T, V> {
+
+    AdaptorToSessionActorMsg convertToActorMsg(C ctx, MsgType type, T inbound) throws AdaptorException;
+
+    //Optional<V> convertToAdaptorMsg(C ctx, SessionActorToAdaptorMsg msg) throws AdaptorException;
+
 }

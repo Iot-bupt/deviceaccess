@@ -15,10 +15,16 @@
  */
 package com.bupt.deviceaccess.transport.mqtt;
 
+import com.bupt.deviceaccess.common.data.security.DeviceTokenCredentials;
+import com.bupt.deviceaccess.common.msg.session.AdaptorToSessionActorMsg;
+import com.bupt.deviceaccess.common.msg.session.BasicToTsKvSessionMsg;
+import com.bupt.deviceaccess.common.msg.session.ctrl.SessionCloseMsg;
+import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
+import com.bupt.deviceaccess.common.transport.adaptor.AdaptorException;
+import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
 import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
 import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.bupt.deviceaccess.transport.mqtt.util.SslUtil;
+import com.bupt.deviceaccess.transport.mqtt.session.GatewaySessionCtx;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.mqtt.*;
@@ -27,29 +33,22 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
-import org.thingsboard.server.common.data.Device;
-import com.bupt.deviceaccess.common.data.security.DeviceTokenCredentials;
-import org.thingsboard.server.common.data.security.DeviceX509Credentials;
-import org.thingsboard.server.common.msg.session.AdaptorToSessionActorMsg;
-import org.thingsboard.server.common.msg.session.BasicToDeviceActorSessionMsg;
-import org.thingsboard.server.common.msg.session.ctrl.SessionCloseMsg;
-import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
-import org.thingsboard.server.common.transport.adaptor.AdaptorException;
-import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
-import org.thingsboard.server.dao.EncryptionUtil;
-import org.thingsboard.server.dao.device.DeviceService;
-import org.thingsboard.server.dao.relation.RelationService;
-import com.bupt.deviceaccess.transport.mqtt.session.GatewaySessionCtx;
 
-import javax.net.ssl.SSLPeerUnverifiedException;
-import javax.security.cert.X509Certificate;
 import java.net.InetSocketAddress;
-import java.util.List;
 
+import static com.bupt.deviceaccess.common.msg.session.MsgType.POST_ATTRIBUTES_REQUEST;
+import static com.bupt.deviceaccess.common.msg.session.MsgType.POST_TELEMETRY_REQUEST;
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.*;
-import static io.netty.handler.codec.mqtt.MqttMessageType.*;
-import static io.netty.handler.codec.mqtt.MqttQoS.*;
-import static org.thingsboard.server.common.msg.session.MsgType.*;
+import static io.netty.handler.codec.mqtt.MqttMessageType.CONNACK;
+import static io.netty.handler.codec.mqtt.MqttQoS.AT_LEAST_ONCE;
+import static io.netty.handler.codec.mqtt.MqttQoS.AT_MOST_ONCE;
+
+//import com.bupt.deviceaccess.common.data.Device;
+//import org.thingsboard.server.common.data.security.DeviceX509Credentials;
+//import org.thingsboard.server.dao.EncryptionUtil;
+//import org.thingsboard.server.dao.device.DeviceService;
+//import org.thingsboard.server.dao.relation.RelationService;
+//import javax.security.cert.X509Certificate;
 
 /**
  * @author Andrew Shvayka
@@ -70,6 +69,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      **/
     private final SslHandler sslHandler;
     private volatile boolean connected;
+
     private volatile InetSocketAddress address;
     private volatile GatewaySessionCtx gatewaySessionCtx;
 
@@ -142,16 +142,17 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         int msgId = mqttMsg.variableHeader().messageId();
         //log.trace("[{}] Processing publish msg [{}][{}]!", sessionId, topicName, msgId);
 
-        if (topicName.startsWith(MqttTopics.BASE_GATEWAY_API_TOPIC)) {
-            if (gatewaySessionCtx != null) {
-                gatewaySessionCtx.setChannel(ctx);
-                handleMqttPublishMsg(topicName, msgId, mqttMsg);
-            }
-        } else {
-            processDevicePublish(ctx, mqttMsg, topicName, msgId);
-        }
+        //if (topicName.startsWith(MqttTopics.BASE_GATEWAY_API_TOPIC)) {
+        //    if (gatewaySessionCtx != null) {
+        //        gatewaySessionCtx.setChannel(ctx);
+        //        handleMqttPublishMsg(topicName, msgId, mqttMsg);
+        //    }
+        //} else {
+        processDevicePublish(ctx, mqttMsg, topicName, msgId);
+        //}
     }
 
+    /**
     private void handleMqttPublishMsg(String topicName, int msgId, MqttPublishMessage mqttMsg) {
         try {
             if (topicName.equals(MqttTopics.GATEWAY_TELEMETRY_TOPIC)) {
@@ -171,6 +172,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             //log.warn("[{}] Failed to process publish msg [{}][{}]", sessionId, topicName, msgId, e);
         }
     }
+    **/
 
     private void processDevicePublish(ChannelHandlerContext ctx, MqttPublishMessage mqttMsg, String topicName, int msgId) {
         AdaptorToSessionActorMsg msg = null;
@@ -179,7 +181,9 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 msg = adaptor.convertToActorMsg(deviceSessionCtx, POST_TELEMETRY_REQUEST, mqttMsg);
             } else if (topicName.equals(MqttTopics.DEVICE_ATTRIBUTES_TOPIC)) {
                 msg = adaptor.convertToActorMsg(deviceSessionCtx, POST_ATTRIBUTES_REQUEST, mqttMsg);
-            } else if (topicName.startsWith(MqttTopics.DEVICE_ATTRIBUTES_REQUEST_TOPIC_PREFIX)) {
+            }
+            /**
+            else if (topicName.startsWith(MqttTopics.DEVICE_ATTRIBUTES_REQUEST_TOPIC_PREFIX)) {
                 msg = adaptor.convertToActorMsg(deviceSessionCtx, GET_ATTRIBUTES_REQUEST, mqttMsg);
                 if (msgId >= 0) {
                     ctx.writeAndFlush(createMqttPubAckMsg(msgId));
@@ -195,13 +199,14 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                     ctx.writeAndFlush(createMqttPubAckMsg(msgId));
                 }
             }
+             **/
         } catch (AdaptorException e) {
-            log.warn("[{}] Failed to process publish msg [{}][{}]", sessionId, topicName, msgId, e);
+            //log.warn("[{}] Failed to process publish msg [{}][{}]", sessionId, topicName, msgId, e);
         }
         if (msg != null) {
-            processor.process(new BasicToDeviceActorSessionMsg(deviceSessionCtx.getDevice(), msg));
+            processor.process(new BasicToTsKvSessionMsg(deviceSessionCtx.getDevice(), msg));
         } else {
-            log.info("[{}] Closing current session due to invalid publish msg [{}][{}]", sessionId, topicName, msgId);
+            //log.info("[{}] Closing current session due to invalid publish msg [{}][{}]", sessionId, topicName, msgId);
             ctx.close();
         }
     }
@@ -293,7 +298,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         } else {
             ctx.writeAndFlush(createMqttConnAckMsg(CONNECTION_ACCEPTED));
             connected = true;
-            checkGatewaySession();
+            //checkGatewaySession();
         }
     }
 /**
@@ -332,9 +337,11 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         ctx.close();
         if (connected) {
             processor.process(SessionCloseMsg.onDisconnect(deviceSessionCtx.getSessionId()));
+            /**
             if (gatewaySessionCtx != null) {
                 gatewaySessionCtx.onGatewayDisconnect();
             }
+             **/
         }
     }
 
@@ -357,6 +364,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         ctx.close();
     }
 
+    /**
     private static MqttSubAckMessage createSubAckMessage(Integer msgId, List<Integer> grantedQoSList) {
         MqttFixedHeader mqttFixedHeader =
                 new MqttFixedHeader(SUBACK, false, AT_LEAST_ONCE, false, 0);
@@ -376,6 +384,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 MqttMessageIdVariableHeader.from(requestId);
         return new MqttPubAckMessage(mqttFixedHeader, mqttMsgIdVariableHeader);
     }
+    **/
 
     private boolean checkConnected(ChannelHandlerContext ctx) {
         if (connected) {
@@ -387,6 +396,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
     }
 
+    /**
     private void checkGatewaySession() {
         Device device = deviceSessionCtx.getDevice();
         JsonNode infoNode = device.getAdditionalInfo();
@@ -397,6 +407,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             }
         }
     }
+    **/
 
     @Override
     public void operationComplete(Future<? super Void> future) throws Exception {

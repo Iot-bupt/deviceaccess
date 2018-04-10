@@ -13,14 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
+package com.bupt.deviceaccess.common.data;
 
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.bupt.deviceaccess.common.data.id.UUIDBased;
 
-/**
- * @author Andrew Shvayka
- */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+public abstract class SearchTextBased<I extends UUIDBased> extends BaseData<I> {
+
+    private static final long serialVersionUID = -539812997348227609L;
+    
+    public SearchTextBased() {
+        super();
+    }
+
+    public SearchTextBased(I id) {
+        super(id);
+    }
+    
+    public SearchTextBased(SearchTextBased<I> searchTextBased) {
+        super(searchTextBased);
+    }
+    
+    @JsonIgnore
+    public abstract String getSearchText(); 
+
 }

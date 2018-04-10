@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.transport.mqtt.adaptors;
-
-import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import com.bupt.deviceaccess.common.transport.TransportAdaptor;
+package com.bupt.deviceaccess.common.data.kv;
 
 /**
- * @author Andrew Shvayka
+ * Represents time series KV data entry
+ * 
+ * @author ashvayka
+ *
  */
-public interface MqttTransportAdaptor extends TransportAdaptor<DeviceSessionCtx, MqttMessage, MqttMessage> {
+public interface TsKvEntry extends KvEntry {
+
+    long getTs();
+
 }
