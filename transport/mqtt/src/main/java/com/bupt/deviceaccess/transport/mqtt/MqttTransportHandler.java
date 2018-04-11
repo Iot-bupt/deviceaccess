@@ -15,7 +15,7 @@
  */
 package com.bupt.deviceaccess.transport.mqtt;
 
-import com.bupt.deviceaccess.common.data.security.DeviceTokenCredentials;
+//import com.bupt.deviceaccess.common.data.security.DeviceTokenCredentials;
 import com.bupt.deviceaccess.common.msg.session.AdaptorToSessionActorMsg;
 import com.bupt.deviceaccess.common.msg.session.BasicToTsKvSessionMsg;
 import com.bupt.deviceaccess.common.msg.session.ctrl.SessionCloseMsg;
@@ -24,21 +24,20 @@ import com.bupt.deviceaccess.common.transport.adaptor.AdaptorException;
 import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
 import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
 import com.bupt.deviceaccess.transport.mqtt.session.DeviceSessionCtx;
-import com.bupt.deviceaccess.transport.mqtt.session.GatewaySessionCtx;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.net.InetSocketAddress;
 
 import static com.bupt.deviceaccess.common.msg.session.MsgType.POST_ATTRIBUTES_REQUEST;
 import static com.bupt.deviceaccess.common.msg.session.MsgType.POST_TELEMETRY_REQUEST;
-import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.*;
+import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_ACCEPTED;
+import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD;
 import static io.netty.handler.codec.mqtt.MqttMessageType.CONNACK;
 import static io.netty.handler.codec.mqtt.MqttQoS.AT_LEAST_ONCE;
 import static io.netty.handler.codec.mqtt.MqttQoS.AT_MOST_ONCE;
@@ -53,7 +52,7 @@ import static io.netty.handler.codec.mqtt.MqttQoS.AT_MOST_ONCE;
 /**
  * @author Andrew Shvayka
  */
-@Slf4j
+
 public class MqttTransportHandler extends ChannelInboundHandlerAdapter implements GenericFutureListener<Future<? super Void>> {
 
     public static final MqttQoS MAX_SUPPORTED_QOS_LVL = AT_LEAST_ONCE;
@@ -71,7 +70,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private volatile boolean connected;
 
     private volatile InetSocketAddress address;
-    private volatile GatewaySessionCtx gatewaySessionCtx;
+    //private volatile GatewaySessionCtx gatewaySessionCtx;
 
     public MqttTransportHandler(SessionMsgProcessor processor,DeviceAuthService authService,
                                 MqttTransportAdaptor adaptor, SslHandler sslHandler) {
@@ -292,10 +291,11 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         if (StringUtils.isEmpty(userName)) {
             ctx.writeAndFlush(createMqttConnAckMsg(CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD));
             ctx.close();
-        } else if (!deviceSessionCtx.login(new DeviceTokenCredentials(msg.payload().userName()))) {
-            ctx.writeAndFlush(createMqttConnAckMsg(CONNECTION_REFUSED_NOT_AUTHORIZED));
-            ctx.close();
-        } else {
+        } //else if (!deviceSessionCtx.login(new DeviceTokenCredentials(msg.payload().userName()))) {
+            //ctx.writeAndFlush(createMqttConnAckMsg(CONNECTION_REFUSED_NOT_AUTHORIZED));
+            //ctx.close();
+        //}
+        else {
             ctx.writeAndFlush(createMqttConnAckMsg(CONNECTION_ACCEPTED));
             connected = true;
             //checkGatewaySession();

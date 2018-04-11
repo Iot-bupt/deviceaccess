@@ -12,13 +12,12 @@
         <module name="mqtt" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="application" target="1.5" />
-      <module name="common" target="1.6" />
-      <module name="deviceaccess" target="1.5" />
-      <module name="devicemanage" target="1.5" />
-      <module name="mqtt" target="1.5" />
-      <module name="transport" target="1.5" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="application" target="1.8" />
+      <module name="common" target="1.8" />
+      <module name="deviceaccess" target="1.8" />
+      <module name="mqtt" target="1.8" />
+      <module name="transport" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

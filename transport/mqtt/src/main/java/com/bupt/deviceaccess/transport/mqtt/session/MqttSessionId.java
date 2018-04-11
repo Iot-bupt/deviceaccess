@@ -15,7 +15,7 @@
  */
 package com.bupt.deviceaccess.transport.mqtt.session;
 
-import org.thingsboard.server.common.data.id.SessionId;
+import com.bupt.deviceaccess.common.data.id.SessionId;
 
 import java.util.concurrent.atomic.AtomicLong;
 

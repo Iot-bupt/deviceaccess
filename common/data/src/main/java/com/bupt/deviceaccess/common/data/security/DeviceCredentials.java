@@ -16,9 +16,9 @@
 package com.bupt.deviceaccess.common.data.security;
 
 import lombok.EqualsAndHashCode;
-import org.thingsboard.server.common.data.BaseData;
-import org.thingsboard.server.common.data.id.DeviceCredentialsId;
-import org.thingsboard.server.common.data.id.DeviceId;
+import com.bupt.deviceaccess.common.data.BaseData;
+import com.bupt.deviceaccess.common.data.id.DeviceCredentialsId;
+import com.bupt.deviceaccess.common.data.id.DeviceId;
 
 @EqualsAndHashCode(callSuper = true)
 public class DeviceCredentials extends BaseData<DeviceCredentialsId> implements DeviceCredentialsFilter {

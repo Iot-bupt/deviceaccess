@@ -17,18 +17,18 @@ package com.bupt.deviceaccess.actors.session;
 
 import akka.actor.OneForOneStrategy;
 import akka.actor.SupervisorStrategy;
-import org.thingsboard.server.actors.ActorSystemContext;
-import org.thingsboard.server.actors.service.ContextAwareActor;
-import org.thingsboard.server.actors.service.ContextBasedCreator;
+import com.bupt.deviceaccess.actors.ActorSystemContext;
+import com.bupt.deviceaccess.actors.service.ContextAwareActor;
+import com.bupt.deviceaccess.actors.service.ContextBasedCreator;
 import org.thingsboard.server.actors.shared.SessionTimeoutMsg;
-import org.thingsboard.server.common.data.id.SessionId;
+import com.bupt.deviceaccess.common.data.id.SessionId;
 import org.thingsboard.server.common.msg.cluster.ClusterEventMsg;
 import org.thingsboard.server.common.msg.core.ToDeviceSessionActorMsg;
-import org.thingsboard.server.common.msg.session.ToDeviceActorSessionMsg;
-import org.thingsboard.server.common.msg.session.SessionCtrlMsg;
-import org.thingsboard.server.common.msg.session.SessionMsg;
-import org.thingsboard.server.common.msg.session.SessionType;
-import org.thingsboard.server.common.msg.session.ctrl.SessionCloseMsg;
+import com.bupt.deviceaccess.common.msg.session.ToTsKvSessionMsg;
+import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
+import com.bupt.deviceaccess.common.msg.session.SessionMsg;
+import com.bupt.deviceaccess.common.msg.session.SessionType;
+import com.bupt.deviceaccess.common.msg.session.ctrl.SessionCloseMsg;
 
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
@@ -62,8 +62,8 @@ public class SessionActor extends ContextAwareActor {
     @Override
     public void onReceive(Object msg) throws Exception {
         logger.debug("[{}] Processing: {}.", sessionId, msg);
-        if (msg instanceof ToDeviceActorSessionMsg) {
-            processDeviceMsg((ToDeviceActorSessionMsg) msg);
+        if (msg instanceof ToTsKvSessionMsg) {
+            processDeviceMsg((ToTsKvSessionMsg) msg);
         } else if (msg instanceof ToDeviceSessionActorMsg) {
             processToDeviceMsg((ToDeviceSessionActorMsg) msg);
         } else if (msg instanceof SessionTimeoutMsg) {
@@ -81,7 +81,7 @@ public class SessionActor extends ContextAwareActor {
         processor.processClusterEvent(context(), msg);
     }
 
-    private void processDeviceMsg(ToDeviceActorSessionMsg msg) {
+    private void processDeviceMsg(ToTsKvSessionMsg msg) {
         initProcessor(msg);
         processor.processToDeviceActorMsg(context(), msg);
     }

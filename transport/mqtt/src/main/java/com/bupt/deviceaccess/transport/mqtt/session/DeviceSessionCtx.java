@@ -15,12 +15,7 @@
  */
 package com.bupt.deviceaccess.transport.mqtt.session;
 
-import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.mqtt.*;
-import lombok.extern.slf4j.Slf4j;
 import com.bupt.deviceaccess.common.data.id.SessionId;
-//import org.thingsboard.server.common.msg.session.SessionActorToAdaptorMsg;
 import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
 import com.bupt.deviceaccess.common.msg.session.SessionType;
 import com.bupt.deviceaccess.common.msg.session.ctrl.SessionCloseMsg;
@@ -29,13 +24,21 @@ import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
 import com.bupt.deviceaccess.common.transport.adaptor.AdaptorException;
 import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
 import com.bupt.deviceaccess.common.transport.session.DeviceAwareSessionContext;
+import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.mqtt.MqttFixedHeader;
+import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttMessageType;
+import io.netty.handler.codec.mqtt.MqttQoS;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+//import org.thingsboard.server.common.msg.session.SessionActorToAdaptorMsg;
 
 /**
  * @author Andrew Shvayka
  */
-@Slf4j
+
 public class DeviceSessionCtx extends DeviceAwareSessionContext {
 
     private final MqttTransportAdaptor adaptor;

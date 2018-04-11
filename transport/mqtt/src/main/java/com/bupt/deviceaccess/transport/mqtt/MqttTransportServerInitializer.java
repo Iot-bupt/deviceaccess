@@ -46,11 +46,11 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
     private final SessionMsgProcessor processor;
     private final DeviceAuthService authService;
     private final MqttTransportAdaptor adaptor;
-    private final MqttSslHandlerProvider sslHandlerProvider;
+   //private final MqttSslHandlerProvider sslHandlerProvider;
 
     public MqttTransportServerInitializer(SessionMsgProcessor processor, DeviceAuthService authService,
-                                          MqttTransportAdaptor adaptor,
-                                          MqttSslHandlerProvider sslHandlerProvider) {
+                                          MqttTransportAdaptor adaptor) {
+                                          //MqttSslHandlerProvider sslHandlerProvider) {
         /**
         this.processor = processor;
         this.deviceService = deviceService;
@@ -60,17 +60,17 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
         this.authService = authService;
         this.processor = processor;
         this.adaptor = adaptor;
-        this.sslHandlerProvider = sslHandlerProvider;
+        //this.sslHandlerProvider = sslHandlerProvider;
     }
 
     @Override
     public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
         SslHandler sslHandler = null;
-        if (sslHandlerProvider != null) {
-            sslHandler = sslHandlerProvider.getSslHandler();
-            pipeline.addLast(sslHandler);
-        }
+        //if (sslHandlerProvider != null) {
+            //sslHandler = sslHandlerProvider.getSslHandler();
+            //pipeline.addLast(sslHandler);
+        //}
         pipeline.addLast("decoder", new MqttDecoder(MAX_PAYLOAD_SIZE));
         pipeline.addLast("encoder", MqttEncoder.DEFAUL_ENCODER);
 

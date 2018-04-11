@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.actors.service;
+package com.bupt.deviceaccess.common.data.id;
 
-import akka.actor.UntypedActor;
-import com.bupt.deviceaccess.actors.ActorSystemContext;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public abstract class ContextAwareActor extends UntypedActor {
+import java.util.UUID;
 
-    public static final int ENTITY_PACK_LIMIT = 1024;
+public class DeviceCredentialsId extends UUIDBased {
 
-    protected final ActorSystemContext systemContext;
-
-    public ContextAwareActor(ActorSystemContext systemContext) {
-        super();
-        this.systemContext = systemContext;
+    @JsonCreator
+    public DeviceCredentialsId(@JsonProperty("id") UUID id) {
+        super(id);
     }
 }

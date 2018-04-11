@@ -13,19 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bupt.deviceaccess.actors.service;
+package com.bupt.deviceaccess.common.data;
 
-import akka.actor.UntypedActor;
-import com.bupt.deviceaccess.actors.ActorSystemContext;
-
-public abstract class ContextAwareActor extends UntypedActor {
-
-    public static final int ENTITY_PACK_LIMIT = 1024;
-
-    protected final ActorSystemContext systemContext;
-
-    public ContextAwareActor(ActorSystemContext systemContext) {
-        super();
-        this.systemContext = systemContext;
-    }
+/**
+ * @author Andrew Shvayka
+ */
+public enum EntityType {
+    TENANT, CUSTOMER, USER, RULE, PLUGIN, DASHBOARD, ASSET, DEVICE, ALARM
 }

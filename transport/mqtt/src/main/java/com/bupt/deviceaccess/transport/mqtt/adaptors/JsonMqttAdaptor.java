@@ -31,7 +31,6 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
@@ -44,7 +43,7 @@ import java.util.Set;
  */
 @SuppressWarnings({"ALL", "Since15"})
 @Component("JsonMqttAdaptor")
-@Slf4j
+
 public class JsonMqttAdaptor implements MqttTransportAdaptor {
 
     private static final Gson GSON = new Gson();

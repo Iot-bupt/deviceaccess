@@ -15,24 +15,19 @@
  */
 package com.bupt.deviceaccess.actors.session;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import akka.actor.*;
-import com.bupt.deviceaccess.actors.ActorSystemContext;
-import org.thingsboard.server.actors.service.ContextAwareActor;
-import com.bupt.deviceaccess.actors.service.ContextBasedCreator;
-import org.thingsboard.server.actors.service.DefaultActorService;
-import org.thingsboard.server.actors.shared.SessionTimeoutMsg;
-import org.thingsboard.server.common.data.id.SessionId;
-import org.thingsboard.server.common.msg.aware.SessionAwareMsg;
-
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import org.thingsboard.server.common.msg.cluster.ClusterEventMsg;
-import org.thingsboard.server.common.msg.core.SessionCloseMsg;
-import org.thingsboard.server.common.msg.core.ToDeviceSessionActorMsg;
-import org.thingsboard.server.common.msg.session.SessionCtrlMsg;
+import com.bupt.deviceaccess.actors.ActorSystemContext;
+import com.bupt.deviceaccess.actors.service.ContextAwareActor;
+import com.bupt.deviceaccess.actors.service.ContextBasedCreator;
+import com.bupt.deviceaccess.actors.service.DefaultActorService;
+import com.bupt.deviceaccess.common.data.id.SessionId;
+import com.bupt.deviceaccess.common.msg.aware.SessionAwareMsg;
+import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SessionManagerActor extends ContextAwareActor {
 
@@ -53,7 +48,9 @@ public class SessionManagerActor extends ContextAwareActor {
             onSessionCtrlMsg((SessionCtrlMsg) msg);
         } else if (msg instanceof SessionAwareMsg) {
             forwardToSessionActor((SessionAwareMsg) msg);
-        } else if (msg instanceof SessionTerminationMsg) {
+        }
+        /**
+        else if (msg instanceof SessionTerminationMsg) {
             onSessionTermination((SessionTerminationMsg) msg);
         } else if (msg instanceof Terminated) {
             onTermination((Terminated) msg);
@@ -62,8 +59,10 @@ public class SessionManagerActor extends ContextAwareActor {
         } else if (msg instanceof ClusterEventMsg) {
             broadcast(msg);
         }
+         **/
     }
 
+    /**
     private void broadcast(Object msg) {
         sessionActors.values().forEach(actorRef -> actorRef.tell(msg, ActorRef.noSender()));
     }
@@ -75,6 +74,7 @@ public class SessionManagerActor extends ContextAwareActor {
             sessionActor.tell(msg, ActorRef.noSender());
         }
     }
+     **/
 
     private void onSessionCtrlMsg(SessionCtrlMsg msg) {
         String sessionIdStr = msg.getSessionId().toUidStr();
@@ -84,6 +84,7 @@ public class SessionManagerActor extends ContextAwareActor {
         }
     }
 
+    /**
     private void onSessionTermination(SessionTerminationMsg msg) {
         String sessionIdStr = msg.getId().toUidStr();
         ActorRef sessionActor = sessionActors.remove(sessionIdStr);
@@ -94,23 +95,24 @@ public class SessionManagerActor extends ContextAwareActor {
             log.debug("[{}] Session actor was already removed.", sessionIdStr);
         }
     }
+     **/
 
     private void forwardToSessionActor(SessionAwareMsg msg) {
-        if (msg instanceof ToDeviceSessionActorMsg || msg instanceof SessionCloseMsg) {
-            String sessionIdStr = msg.getSessionId().toUidStr();
-            ActorRef sessionActor = sessionActors.get(sessionIdStr);
-            if (sessionActor != null) {
-                sessionActor.tell(msg, ActorRef.noSender());
-            } else {
-                log.debug("[{}] Session actor was already removed.", sessionIdStr);
-            }
-        } else {
+        //if (msg instanceof ToDeviceSessionActorMsg || msg instanceof SessionCloseMsg) {
+        //    String sessionIdStr = msg.getSessionId().toUidStr();
+        //    ActorRef sessionActor = sessionActors.get(sessionIdStr);
+        //    if (sessionActor != null) {
+        //        sessionActor.tell(msg, ActorRef.noSender());
+        //    } else {
+        //        log.debug("[{}] Session actor was already removed.", sessionIdStr);
+        //    }
+        //} else {
             try {
                 getOrCreateSessionActor(msg.getSessionId()).tell(msg, self());
             } catch (InvalidActorNameException e) {
                 log.info("Invalid msg : {}", msg);
             }
-        }
+       //}
     }
 
     private ActorRef getOrCreateSessionActor(SessionId sessionId) {

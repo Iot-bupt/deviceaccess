@@ -24,9 +24,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.ResourceLeakDetector;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,8 @@ import javax.annotation.PreDestroy;
  * @author Andrew Shvayka
  */
 @Service("MqttTransportService")
-@Slf4j
+//@Slf4j
+@SpringBootConfiguration
 public class MqttTransportService {
 
     private static final String V1 = "v1";
@@ -64,19 +65,21 @@ public class MqttTransportService {
 
     @Autowired(required = false)
     private RelationService relationService;
-    **/
+
+
     @Autowired(required = false)
     private MqttSslHandlerProvider sslHandlerProvider;
+    **/
 
     @Value("${mqtt.bind_address}")
     private String host;
     @Value("${mqtt.bind_port}")
     private Integer port;
     @Value("${mqtt.adaptor}")
-    private String adaptorName;
+    private String adaptorName = "JsonMqttAdaptor";
 
     @Value("${mqtt.netty.leak_detector_level}")
-    private String leakDetectorLevel;
+    private String leakDetectorLevel="DISABLED";
     @Value("${mqtt.netty.boss_group_thread_count}")
     private Integer bossGroupThreadCount;
     @Value("${mqtt.netty.worker_group_thread_count}")
@@ -104,7 +107,7 @@ public class MqttTransportService {
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(new MqttTransportServerInitializer(processor, authService, adaptor, sslHandlerProvider));
+                .childHandler(new MqttTransportServerInitializer(processor, authService, adaptor));
 
         serverChannel = b.bind(host, port).sync().channel();
         //log.info("Mqtt transport started!");
@@ -120,5 +123,22 @@ public class MqttTransportService {
             workerGroup.shutdownGracefully();
         }
         //log.info("MQTT transport stopped!");
+    }
+
+    public MqttTransportService(int port){
+        this.port=port;
+        this.host="127.0.0.1";
+    }
+
+
+    public static void main(String[] args) throws Exception {
+
+        int port;
+        if (args.length > 0) {
+            port = Integer.parseInt(args[0]);
+        } else {
+            port = 8080;
+        }
+        new MqttTransportService(port).init();
     }
 }
