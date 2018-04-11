@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.bupt.common:transport:unknown">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/bupt/common/transport/unknown/transport-unknown.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/com/bupt/common/transport/unknown/transport-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/bupt/common/transport/unknown/transport-unknown-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

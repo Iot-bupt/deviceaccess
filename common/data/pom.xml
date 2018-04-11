@@ -19,16 +19,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.thingsboard</groupId>
-        <version>1.4.0-SNAPSHOT</version>
+        <groupId>com.bupt</groupId>
+        <version>1.0-SNAPSHOT</version>
         <artifactId>common</artifactId>
     </parent>
-    <groupId>org.thingsboard.common</groupId>
+    <groupId>com.bupt.common</groupId>
     <artifactId>data</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard Server Common Data</name>
-    <url>http://thingsboard.org</url>
+    <name>Device Management Server Common Data</name>
+    <url>http://devicemanage.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +36,7 @@
     </properties>
 
     <dependencies>
+        
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

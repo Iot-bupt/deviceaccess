@@ -15,23 +15,24 @@
  */
 package com.bupt.deviceaccess.common.transport.session;
 
-import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
-import com.bupt.deviceaccess.common.msg.session.ex.SessionException;
-import lombok.extern.slf4j.Slf4j;
 import com.bupt.deviceaccess.common.data.Device;
 import com.bupt.deviceaccess.common.data.security.DeviceCredentialsFilter;
 import com.bupt.deviceaccess.common.msg.session.SessionContext;
+import com.bupt.deviceaccess.common.msg.session.SessionCtrlMsg;
+import com.bupt.deviceaccess.common.msg.session.ex.SessionException;
 import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
 import com.bupt.deviceaccess.common.transport.auth.DeviceAuthResult;
 import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
 
 import java.util.Optional;
 
+//import org.slf4j.*;
+
 /**
  * @author Andrew Shvayka
  */
 @SuppressWarnings("ALL")
-@Slf4j
+//@Slf4j
 public abstract class DeviceAwareSessionContext implements SessionContext {
 
     protected final DeviceAuthService authService;
@@ -63,7 +64,7 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
             }
             return true;
         } else {
-            log.debug("Can't find device using credentials [{}] due to {}", credentials, result.getErrorMsg());
+            //log.debug("Can't find device using credentials [{}] due to {}", credentials, result.getErrorMsg());
             return false;
         }
     }

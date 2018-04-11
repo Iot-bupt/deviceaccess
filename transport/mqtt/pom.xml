@@ -11,8 +11,8 @@
     <artifactId>mqtt</artifactId>
     <packaging>jar</packaging>
 
-    <name>Thingsboard MQTT Transport</name>
-    <url>http://thingsboard.org</url>
+    <name>Device Management Server Transport MQTT</name>
+    <url>http://devicemanage.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,11 +20,10 @@
     </properties>
 
     <dependencies>
-
-        <!--<dependency>
-            <groupId>org.thingsboard.common</groupId>
+        <dependency>
+            <groupId>com.bupt.common</groupId>
             <artifactId>transport</artifactId>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
@@ -39,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
+            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
