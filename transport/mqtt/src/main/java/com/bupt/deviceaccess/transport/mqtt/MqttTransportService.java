@@ -26,7 +26,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.ResourceLeakDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +42,6 @@ import javax.annotation.PreDestroy;
  */
 @Service("MqttTransportService")
 //@Slf4j
-@SpringBootConfiguration
 public class MqttTransportService {
 
     private static final String V1 = "v1";
@@ -76,10 +74,10 @@ public class MqttTransportService {
     @Value("${mqtt.bind_port}")
     private Integer port;
     @Value("${mqtt.adaptor}")
-    private String adaptorName = "JsonMqttAdaptor";
+    private String adaptorName;
 
     @Value("${mqtt.netty.leak_detector_level}")
-    private String leakDetectorLevel="DISABLED";
+    private String leakDetectorLevel;
     @Value("${mqtt.netty.boss_group_thread_count}")
     private Integer bossGroupThreadCount;
     @Value("${mqtt.netty.worker_group_thread_count}")
@@ -125,6 +123,7 @@ public class MqttTransportService {
         //log.info("MQTT transport stopped!");
     }
 
+    /**
     public MqttTransportService(int port){
         this.port=port;
         this.host="127.0.0.1";
@@ -141,4 +140,5 @@ public class MqttTransportService {
         }
         new MqttTransportService(port).init();
     }
+     **/
 }

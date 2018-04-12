@@ -15,6 +15,7 @@
  */
 package org.thingsboard.server.common.data;
 
+import com.bupt.deviceaccess.common.data.UUIDConverter;
 import com.datastax.driver.core.utils.UUIDs;
 import org.junit.Assert;
 import org.junit.Test;
