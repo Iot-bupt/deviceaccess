@@ -17,20 +17,9 @@ package com.bupt.deviceaccess.transport.mqtt;
 
 import com.bupt.deviceaccess.common.transport.SessionMsgProcessor;
 import com.bupt.deviceaccess.common.transport.auth.DeviceAuthService;
-import com.bupt.deviceaccess.transport.mqtt.adaptors.MqttTransportAdaptor;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.util.ResourceLeakDetector;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 /**
  * import org.thingsboard.server.dao.device.DeviceService;
@@ -57,7 +46,7 @@ public class MqttTransportService {
      @Autowired(required = false)
      private DeviceAuthService authService;
 
-     /**
+
     @Autowired(required = false)
     private DeviceService deviceService;
 
@@ -67,7 +56,7 @@ public class MqttTransportService {
 
     @Autowired(required = false)
     private MqttSslHandlerProvider sslHandlerProvider;
-    **/
+
 
     @Value("${mqtt.bind_address}")
     private String host;
